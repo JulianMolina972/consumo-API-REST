@@ -8,6 +8,23 @@ const api =  axios.create({
   }
 }); 
 
+async function forEachContainer ( movies, section) {
+
+  section.innerHTML = '';
+  movies.forEach(movie => {
+  const movieContainer = document.createElement('div');
+  movieContainer.classList.add('movie-container');
+  
+  const movieImg = document.createElement('img');
+  movieImg.classList.add('movie-img');
+  movieImg.setAttribute('alt', movie.title);
+  movieImg.setAttribute('src',
+    'https://image.tmdb.org/t/p/w300/' + movie.poster_path);
+  
+  movieContainer.appendChild(movieImg);
+  section.appendChild(movieContainer);
+  });
+}
 
 
 async function getTrendingMoviesPreview() {
@@ -46,7 +63,7 @@ async function getCategoriesPreview() {
 
 
 async function getMoviesByCategory(id) {
-  window.scroll(0, 0);
+  // window.scroll(0, 0);
   const{ data } = await api('discover/movie',
   {
     params: {
@@ -58,21 +75,15 @@ async function getMoviesByCategory(id) {
 
 }
 
-
-async function forEachContainer ( movies, section) {
-
-  section.innerHTML = '';
-  movies.forEach(movie => {
-  const movieContainer = document.createElement('div');
-  movieContainer.classList.add('movie-container');
+async function getMoviesBySearch(query) {
   
-  const movieImg = document.createElement('img');
-  movieImg.classList.add('movie-img');
-  movieImg.setAttribute('alt', movie.title);
-  movieImg.setAttribute('src',
-    'https://image.tmdb.org/t/p/w300/' + movie.poster_path);
-  
-  movieContainer.appendChild(movieImg);
-  section.appendChild(movieContainer);
+  const{ data } = await api('search/movie',
+  {
+    params: {
+      query,
+    },
   });
+  const movies = data.results;
+  forEachContainer(movies, genericSection);
+
 }
